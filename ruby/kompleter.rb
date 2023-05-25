@@ -199,7 +199,7 @@ module Kompleter
       repository.each do |key, keywords|
         next if only_keys && !only_keys.include?(key)
 
-        if keywords.is_a?(Fixnum)
+        if keywords.is_a?(Integer)
           keywords = data_server.get_data(keywords)
           next unless keywords
           repository[key] = keywords
@@ -214,7 +214,7 @@ module Kompleter
 
     def expire_data(key)
       data_or_id = repository.delete(key)
-      data_server.expire_data_async(data_or_id) if data_or_id && data_or_id.is_a?(Fixnum)
+      data_server.expire_data_async(data_or_id) if data_or_id && data_or_id.is_a?(Integer)
     end
   end
 
@@ -297,7 +297,7 @@ module Kompleter
 
       tag_files.each do |file|
         file = File.expand_path(file)
-        if File.exists?(file)
+        if File.exist?(file)
           mtime = File.mtime(file).to_i
           if tags_mtimes[file] < mtime
             tags_mtimes[file] = mtime
