@@ -273,8 +273,17 @@ module Kompleter
       @dictionaries      = []
     end
 
+    private def silence_stderr
+      require 'stringio'
+      old_stderr = $stderr
+      $stderr = StringIO.new
+      yield
+    ensure
+      $stderr = old_stderr
+    end
+
     def process_current_buffer
-      buffer = VIM::Buffer.current
+      buffer = silence_stderr { VIM::Buffer.current }
       tick   = VIM.evaluate("b:changedtick")
 
       return if buffer_ticks[buffer.number] == tick
